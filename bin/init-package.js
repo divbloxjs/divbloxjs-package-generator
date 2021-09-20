@@ -98,7 +98,8 @@ async function createDefaults(configPath, packageName) {
                 }
             }
         }
-        const finalLocation = filesToCreate[fileDescription].location.replace('packageName',packageName);
+        const finalLocation = dxConfig["divbloxPackagesRootLocal"]+"/"+packageName+"/"+
+            filesToCreate[fileDescription].location.replace('packageName',packageName);
         await fsAsync.writeFile(finalLocation, fileContentStr);
     }
     console.log("Divblox package initialization done!");
