@@ -123,7 +123,7 @@ async function preparePackage() {
     try {
         if (!fs.existsSync("./"+dxConfigPath)) {
             console.error("Divblox config path not found. You can try again or try to reinstall divbloxjs by running the " +
-                "divbloxjs application generator with: 'npx github:divbloxjs/divbloxjs-application-generator'");
+                "divbloxjs application generator with:\n'npx github:divbloxjs/divbloxjs-application-generator'");
             return;
         }
     } catch(e) {
