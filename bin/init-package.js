@@ -77,7 +77,7 @@ function getNormalizePackageName(packageName) {
  */
 async function createDefaults(configPath, packageName) {
     let dxConfig = await fsAsync.readFile("./"+configPath);
-    console.dir(dxConfig);
+    console.dir(JSON.parse(dxConfig.toString()));
     return;
     if (!fs.existsSync("./"+configPath+"/")){
         console.log("Creating "+folderDescription+" directory...");
