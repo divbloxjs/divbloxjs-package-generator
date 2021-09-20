@@ -7,31 +7,14 @@ const dxUtils = require('dx-utils');
 const TEMPLATE_DIR = path.join(__dirname, '..', 'templates')
 
 const filesToCreate = {
-    "Package": {"location": "package.json",
-        "template": TEMPLATE_DIR+'/configs/package.json',
-        "tokens":["appName"]},
-    "Data model": {"location": "divblox-config/data-model.json",
-        "template": TEMPLATE_DIR+'/configs/data-model.json'},
-    "Divblox Config": {"location": "divblox-config/dxconfig.json",
-        "template": TEMPLATE_DIR+'/configs/dxconfig.json'},
-    "Divblox Entry Point": {"location": "bin/divblox-entry-point.js",
-        "template": TEMPLATE_DIR+'/divblox-entry-point.js'},
-    "Divblox App": {"location": "dx-app.js",
-        "template": TEMPLATE_DIR+'/dx-app.js'},
-    "Divblox local packages readme": {"location": "divblox-packages-local/readme.md",
-        "template": TEMPLATE_DIR+'/infos/dx-packages-readme.md'},
-    "Divblox api route": {"location": "divblox-routes/api.js",
-        "template": TEMPLATE_DIR+'/routes/api.js'},
-    "Divblox index route": {"location": "divblox-routes/www/index.js",
-        "template": TEMPLATE_DIR+'/routes/www/index.js'},
-    "Divblox example route": {"location": "divblox-routes/dx-example.js",
-        "template": TEMPLATE_DIR+'/routes/dx-example.js'},
-    "Divblox error view": {"location": "divblox-views/error.pug",
-        "template": TEMPLATE_DIR+'/views/error.pug'},
-    "Divblox index view": {"location": "divblox-views/index.pug",
-        "template": TEMPLATE_DIR+'/views/index.pug'},
-    "Divblox layout view": {"location": "divblox-views/layout.pug",
-        "template": TEMPLATE_DIR+'/views/layout.pug'},
+    "Data model": {"location": "data-model.json",
+        "template": TEMPLATE_DIR+'/data-model.json'},
+    "Package main js": {"location": "packageName.js",
+        "template": TEMPLATE_DIR+'/packageName.js',
+        "tokens":["packageName"]},
+    "Package end point js": {"location": "packageNameEndPoint.js",
+        "template": TEMPLATE_DIR+'/packageNameEndPoint.js',
+        "tokens":["packageName"]}
 }
 
 /**
@@ -77,18 +60,30 @@ function getNormalizePackageName(packageName) {
  */
 async function createDefaults(configPath, packageName) {
     let dxConfig = await fsAsync.readFile("./"+configPath);
-    console.dir(JSON.parse(dxConfig.toString()));
-    return;
-    if (!fs.existsSync("./"+configPath+"/")){
-        console.log("Creating "+folderDescription+" directory...");
-        fs.mkdirSync(foldersToCreate[folderDescription]);
+    dxConfig = JSON.parse(dxConfig.toString());
+    if (typeof dxConfig["divbloxPackagesRootLocal"] === "undefined") {
+        console.error("The provided dxconfig.json file does not contain a path definition for 'divbloxPackagesRootLocal'.\n" +
+            "Cannot proceed.");
+        return;
+    }
+    if (!fs.existsSync("./"+dxConfig["divbloxPackagesRootLocal"])) {
+        console.log("Creating "+dxConfig["divbloxPackagesRootLocal"]+" directory...");
+        fs.mkdirSync(dxConfig["divbloxPackagesRootLocal"]);
     }
 
+    if (fs.existsSync("./"+dxConfig["divbloxPackagesRootLocal"]+"/"+packageName)){
+        console.error("The provided package name already exists in the local divblox packages folder.");
+        return;
+    }
+    console.log("Creating "+dxConfig["divbloxPackagesRootLocal"]+"/"+packageName+" directory...");
+    fs.mkdirSync(dxConfig["divbloxPackagesRootLocal"]+"/"+packageName);
+
+    const packageNameCamelCase = dxUtils.convertLowerCaseToCamelCase(packageName,"-");
     for (const fileDescription of Object.keys(filesToCreate)) {
         console.log("Creating "+fileDescription+"...");
         let fileContentStr = await fsAsync.readFile(filesToCreate[fileDescription].template);
         fileContentStr = fileContentStr.toString();
-        const tokensToReplace = {"appName": appName};
+        const tokensToReplace = {"packageName": packageNameCamelCase};
         const availableTokensToReplace = filesToCreate[fileDescription].tokens;
         if (typeof availableTokensToReplace !== "undefined") {
             for (const token of availableTokensToReplace) {
@@ -103,8 +98,8 @@ async function createDefaults(configPath, packageName) {
                 }
             }
         }
-
-        await fsAsync.writeFile(filesToCreate[fileDescription].location, fileContentStr);
+        const finalLocation = filesToCreate[fileDescription].location.replace('packageName',packageName);
+        await fsAsync.writeFile(finalLocation, fileContentStr);
     }
     console.log("Divblox package initialization done!");
 }
