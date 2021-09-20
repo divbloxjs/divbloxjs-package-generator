@@ -66,6 +66,19 @@ async function createDefaults(configPath, packageName) {
             "Cannot proceed.");
         return;
     }
+    if (typeof dxConfig["divbloxPackages"] === "undefined") {
+        dxConfig["divbloxPackages"] = {
+            "local": [],
+            "npm": []
+        }
+    }
+
+    if (typeof dxConfig["divbloxPackages"]["local"] === "undefined") {
+        dxConfig["divbloxPackages"]["local"] = [packageName];
+    } else {
+        dxConfig["divbloxPackages"]["local"].push(packageName);
+    }
+
     if (!fs.existsSync("./"+dxConfig["divbloxPackagesRootLocal"])) {
         console.log("Creating "+dxConfig["divbloxPackagesRootLocal"]+" directory...");
         fs.mkdirSync(dxConfig["divbloxPackagesRootLocal"]);
@@ -102,6 +115,7 @@ async function createDefaults(configPath, packageName) {
             filesToCreate[fileDescription].location.replace('packageName',packageName);
         await fsAsync.writeFile(finalLocation, fileContentStr);
     }
+    await fsAsync.writeFile(configPath, JSON.stringify(dxConfig,null,2));
     console.log("Divblox package initialization done!");
 }
 
