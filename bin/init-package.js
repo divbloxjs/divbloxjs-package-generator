@@ -12,8 +12,8 @@ const filesToCreate = {
     "Package main js": {"location": "packageName.js",
         "template": TEMPLATE_DIR+'/packageName.js',
         "tokens":["packageName"]},
-    "Package end point js": {"location": "packageNameEndPoint.js",
-        "template": TEMPLATE_DIR+'/packageNameEndPoint.js',
+    "Package end point js": {"location": "packageName-end-point.js",
+        "template": TEMPLATE_DIR+'/packageName-end-point.js',
         "tokens":["packageName"]}
 }
 
