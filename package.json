@@ -1,0 +1,33 @@
+{
+  "name": "divbloxjs-package-generator",
+  "version": "1.0.0",
+  "description": "A package generator for divbloxjs that creates all the core required files and updates the local divblox configuration",
+  "main": "bin/init-package.js",
+  "preferGlobal": true,
+  "bin": {
+    "divbloxjs-application-generator": "./bin/init-package.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/divbloxjs/divbloxjs-package-generator.git"
+  },
+  "keywords": [
+    "divblox",
+    "divbloxjs",
+    "divbloxjs",
+    "package",
+    "generator"
+  ],
+  "author": "Johan Griesel, johan@stratusolve.com (Stratusolve (Pty) Ltd)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/divbloxjs/divbloxjs-package-generator/issues"
+  },
+  "homepage": "https://github.com/divbloxjs/divbloxjs-package-generator#readme",
+  "dependencies": {
+    "dx-utils": "github:divbloxjs/dx-utils"
+  }
+}
