@@ -155,7 +155,8 @@ async function preparePackage() {
  * @return {Promise<void>}
  */
 async function createPackage(configPath, packageName) {
-    const normalizedPackageName = getNormalizePackageName(packageName);
+    const lowerCasePackageName = dxUtils.getCamelCaseSplittedToLowerCase(packageName," ");
+    const normalizedPackageName = getNormalizePackageName(lowerCasePackageName);
     console.log("Creating package '"+normalizedPackageName+"'... ");
     await createDefaults(configPath, normalizedPackageName);
 
