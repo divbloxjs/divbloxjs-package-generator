@@ -114,9 +114,12 @@ async function createDefaults(configPath, packageName) {
  * @return {Promise<void>}
  */
 async function preparePackage() {
-    const dxConfigPath = await dxUtils.getCommandLineInput("The Divblox package generator requires divbloxjs to be " +
-        "installed and configured. Please provide the path to the file 'dxconfig.json': " +
-        "(Usually 'divblox-config/dxconfig.json')");
+    let dxConfigPath = await dxUtils.getCommandLineInput("The Divblox package generator requires divbloxjs to be " +
+        "installed and configured.\nPlease provide the path to the file 'dxconfig.json': " +
+        "(Usually 'divblox-config/dxconfig.json') (Press ENTER to use the default path)");
+    if (dxConfigPath.length === 0) {
+        dxConfigPath = 'divblox-config/dxconfig.json';
+    }
     try {
         if (!fs.existsSync("./"+dxConfigPath)) {
             console.error("Divblox config path not found. You can try again or try to reinstall divbloxjs by running the " +
