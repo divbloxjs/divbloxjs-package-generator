@@ -9,11 +9,11 @@ const TEMPLATE_DIR = path.join(__dirname, '..', 'templates')
 const filesToCreate = {
     "Data model": {"location": "data-model.json",
         "template": TEMPLATE_DIR+'/data-model.json'},
-    "Package main js": {"location": "packageName.js",
-        "template": TEMPLATE_DIR+'/packageName.js',
+    "Package main js": {"location": "index.js",
+        "template": TEMPLATE_DIR+'/index.js',
         "tokens":["packageName","dxAppScriptRequire"]},
-    "Package end point js": {"location": "packageName-end-point.js",
-        "template": TEMPLATE_DIR+'/packageName-end-point.js',
+    "Package end point js": {"location": "endpoint.js",
+        "template": TEMPLATE_DIR+'/endpoint.js',
         "tokens":["packageName","dxAppScriptRequire"]}
 }
 
@@ -119,8 +119,7 @@ async function createDefaults(configPath, appScriptName, packageName) {
                 }
             }
         }
-        const finalLocation = dxConfig["divbloxPackagesRootLocal"]+"/"+packageName+"/"+
-            filesToCreate[fileDescription].location.replace('packageName',packageName);
+        const finalLocation = dxConfig["divbloxPackagesRootLocal"]+"/"+packageName+"/"+filesToCreate[fileDescription].location;
         await fsAsync.writeFile(finalLocation, fileContentStr);
     }
     await fsAsync.writeFile(configPath, JSON.stringify(dxConfig,null,2));
