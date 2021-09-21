@@ -95,7 +95,7 @@ async function createDefaults(configPath, appScriptName, packageName) {
     const packageNameCamelCase = dxUtils.convertLowerCaseToCamelCase(packageName,"-");
     const dxPackagesPathParts = dxConfig["divbloxPackagesRootLocal"].split("/");
     let dxAppScriptRequire = '../'+appScriptName;
-    for (let i = 0; i <= dxPackagesPathParts.length; i++) {
+    for (let i = 0; i < dxPackagesPathParts.length; i++) {
         dxAppScriptRequire = '../'+dxAppScriptRequire;
     }
     for (const fileDescription of Object.keys(filesToCreate)) {
