@@ -55,17 +55,18 @@ function getNormalizePackageName(packageName) {
 /**
  * Creates the minimum configuration files needed for a Divblox package
  * @param configPath The path to the divblox config for the local project
+ * @param appScriptName The filename for the dx app script in the project root
  * @param packageName The name of the package
  * @returns {Promise<void>}
  */
-async function createDefaults(configPath, packageName) {
+async function createDefaults(configPath, appScriptName, packageName) {
     let dxConfig = await fsAsync.readFile("./"+configPath);
     dxConfig = JSON.parse(dxConfig.toString());
+
     if (typeof dxConfig["divbloxPackagesRootLocal"] === "undefined") {
-        console.error("The provided dxconfig.json file does not contain a path definition for 'divbloxPackagesRootLocal'.\n" +
-            "Cannot proceed.");
-        return;
+        dxConfig["divbloxPackagesRootLocal"] = "divblox-packages-local";
     }
+
     if (typeof dxConfig["divbloxPackages"] === "undefined") {
         dxConfig["divbloxPackages"] = {
             "local": [],
@@ -92,11 +93,18 @@ async function createDefaults(configPath, packageName) {
     fs.mkdirSync(dxConfig["divbloxPackagesRootLocal"]+"/"+packageName);
 
     const packageNameCamelCase = dxUtils.convertLowerCaseToCamelCase(packageName,"-");
+    const dxPackagesPathParts = dxConfig["divbloxPackagesRootLocal"].split("/");
+    let dxAppScriptRequire = '../'+appScriptName;
+    for (let i = 0; i <= dxPackagesPathParts.length; i++) {
+        dxAppScriptRequire = '../'+dxAppScriptRequire;
+    }
     for (const fileDescription of Object.keys(filesToCreate)) {
         console.log("Creating "+fileDescription+"...");
         let fileContentStr = await fsAsync.readFile(filesToCreate[fileDescription].template);
         fileContentStr = fileContentStr.toString();
-        const tokensToReplace = {"packageName": packageNameCamelCase};
+        const tokensToReplace = {
+            "packageName": packageNameCamelCase,
+            "dxAppScriptRequire": dxAppScriptRequire};
         const availableTokensToReplace = filesToCreate[fileDescription].tokens;
         if (typeof availableTokensToReplace !== "undefined") {
             for (const token of availableTokensToReplace) {
@@ -124,12 +132,13 @@ async function createDefaults(configPath, packageName) {
  * @return {Promise<void>}
  */
 async function preparePackage() {
-    let dxConfigPath = await dxUtils.getCommandLineInput("The Divblox package generator requires divbloxjs to be " +
-        "installed and configured.\nPlease provide the path to the file 'dxconfig.json': " +
-        "(Usually 'divblox-config/dxconfig.json') (Press ENTER to use the default path)");
-    if (dxConfigPath.length === 0) {
-        dxConfigPath = 'divblox-config/dxconfig.json';
+    let dxConfigFolderPath = await dxUtils.getCommandLineInput("The Divblox package generator requires divbloxjs to be " +
+        "installed and configured.\nPlease provide the folder path that contains the file 'dxconfig.json': " +
+        "(Usually 'divblox-config') (Press ENTER to use the default folder path)");
+    if (dxConfigFolderPath.length === 0) {
+        dxConfigFolderPath = 'divblox-config';
     }
+    const dxConfigPath = dxConfigFolderPath+"/dxconfig.json";
     try {
         if (!fs.existsSync("./"+dxConfigPath)) {
             console.error("Divblox config path not found. You can try again or try to reinstall divbloxjs by running the " +
@@ -140,9 +149,27 @@ async function preparePackage() {
         console.error("An error occurred while checking the divblox config path. Please try again");
         return;
     }
+
+    let dxAppScriptPath = await dxUtils.getCommandLineInput("Please provide the name for the dx-app script: " +
+        "(Usually 'dx-app.js') (Press ENTER to use the default script name)");
+    if (dxAppScriptPath.length === 0) {
+        dxAppScriptPath = 'dx-app';
+    }
+    try {
+        if (!fs.existsSync("./"+dxAppScriptPath+".js")) {
+            console.error(dxAppScriptPath+".js not found. This script should be in the current folder. You can try again " +
+                "or try to reinstall divbloxjs by running the " +
+                "divbloxjs application generator with:\n'npx github:divbloxjs/divbloxjs-application-generator'");
+            return;
+        }
+    } catch(e) {
+        console.error("An error occurred while checking the divblox app script. Please try again");
+        return;
+    }
+
     const packageName = await dxUtils.getCommandLineInput("Package name:");
     if (packageName.length > 1) {
-        await createPackage(dxConfigPath, packageName);
+        await createPackage(dxConfigPath, dxAppScriptPath, packageName);
     } else {
         console.error("Invalid package name provided. Please try again.");
     }
@@ -151,10 +178,11 @@ async function preparePackage() {
 /**
  * Creates a new node package with the given name and installs divbloxjs
  * @param configPath The path to the divblox config for the local project
+ * @param appScriptName The filename for the dx app script in the project root
  * @param packageName The packageName provided via the command line
  * @return {Promise<void>}
  */
-async function createPackage(configPath, packageName) {
+async function createPackage(configPath, appScriptName, packageName) {
     const lowerCasePackageName = dxUtils.getCamelCaseSplittedToLowerCase(packageName," ");
     const normalizedPackageName = getNormalizePackageName(lowerCasePackageName);
     console.log("Creating package '"+normalizedPackageName+"'... ");

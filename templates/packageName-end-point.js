@@ -1,0 +1,1 @@
+const dx = require('[dxAppScriptRequire]');
