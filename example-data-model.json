@@ -1,48 +1,26 @@
 {
-  "auditLogEntry": {
+  "exampleEntity": {
     "module": "main",
     "attributes": {
-      "entryTimeStamp": "datetime",
-      "objectName": "varchar(50)",
-      "modificationType": "varchar(15)",
-      "userIdentifier": "varchar(150)",
-      "objectId": "bigint",
-      "entryDetail": "text",
-      "apiKey": "varchar(50)"
+      "exampleDateTime": "datetime",
+      "exampleString": "varchar(50)",
+      "exampleNumber": "int",
+      "exampleText": "text"
     },
     "relationships": {
-    }
-  },
-  "account": {
-    "module": "main",
-    "attributes": {
-      "firstName": "varchar(50)",
-      "lastName": "varchar(50)",
-      "cell": "varchar(50) unique",
-      "idNumber": "varchar(25)"
-    },
-    "relationships": {
-      "userRole": [
-        "mainRole",
-        "secondRole"
-      ],
-      "passwordResetToken": [
-        "token"
+      "secondExampleEntity": [
+        "firstRelationship",
+        "secondRelationship"
       ]
     }
   },
-  "userRole": {
+  "secondExampleEntity": {
     "module": "main",
     "attributes": {
-      "role": "varchar(50) unique"
-    },
-    "relationships": {
-    }
-  },
-  "passwordResetToken": {
-    "module": "main",
-    "attributes": {
-      "token": "varchar(50) unique"
+      "exampleDateTime": "datetime",
+      "exampleString": "varchar(50)",
+      "exampleNumber": "int",
+      "exampleText": "text"
     },
     "relationships": {
     }
