@@ -11,10 +11,10 @@ const filesToCreate = {
         "template": TEMPLATE_DIR+'/data-model.json'},
     "Package main js": {"location": "packageName.js",
         "template": TEMPLATE_DIR+'/packageName.js',
-        "tokens":["packageName"]},
+        "tokens":["packageName","dxAppScriptRequire"]},
     "Package end point js": {"location": "packageName-end-point.js",
         "template": TEMPLATE_DIR+'/packageName-end-point.js',
-        "tokens":["packageName"]}
+        "tokens":["packageName","dxAppScriptRequire"]}
 }
 
 /**
@@ -186,7 +186,7 @@ async function createPackage(configPath, appScriptName, packageName) {
     const lowerCasePackageName = dxUtils.getCamelCaseSplittedToLowerCase(packageName," ");
     const normalizedPackageName = getNormalizePackageName(lowerCasePackageName);
     console.log("Creating package '"+normalizedPackageName+"'... ");
-    await createDefaults(configPath, normalizedPackageName);
+    await createDefaults(configPath, appScriptName, normalizedPackageName);
 
 }
 
