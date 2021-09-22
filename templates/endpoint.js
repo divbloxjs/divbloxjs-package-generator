@@ -2,7 +2,7 @@ const dx = require('[dxAppScriptRequire]');
 const [packageName]Controller = require('./index');
 const divbloxEndpointBase = require('divbloxjs/dx-core-modules/endpoint-base');
 
-class [packageName]Endpoint extends divbloxEndpointBase {
+class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
     constructor() {
         super();
         // TODO: Declare any additional operations here
@@ -13,7 +13,7 @@ class [packageName]Endpoint extends divbloxEndpointBase {
         await super.executeOperation(operation, request);
 
         switch(operation) {
-            case 'getPackageName': await this.test();
+            case 'getPackageName': await this.getPackageName();
                 break;
             // TODO: Add additional cases here for each declared operation
         }
@@ -25,6 +25,6 @@ class [packageName]Endpoint extends divbloxEndpointBase {
 
     // TODO: Add implementations for each declared operation below
 }
-const [packageName]EndpointInstance = new [packageName]Endpoint();
+const [packageName]EndpointInstance = new [packageNamePascalCase]Endpoint();
 
 module.exports = [packageName]EndpointInstance;

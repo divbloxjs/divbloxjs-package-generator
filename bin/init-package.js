@@ -11,10 +11,10 @@ const filesToCreate = {
         "template": TEMPLATE_DIR+'/data-model.json'},
     "Package main js": {"location": "index.js",
         "template": TEMPLATE_DIR+'/index.js',
-        "tokens":["packageName","dxAppScriptRequire"]},
+        "tokens":["packageName","packageNamePascalCase","dxAppScriptRequire"]},
     "Package end point js": {"location": "endpoint.js",
         "template": TEMPLATE_DIR+'/endpoint.js',
-        "tokens":["packageName","dxAppScriptRequire"]}
+        "tokens":["packageName","packageNamePascalCase","dxAppScriptRequire"]}
 }
 
 /**
@@ -93,6 +93,7 @@ async function createDefaults(configPath, appScriptName, packageName) {
     fs.mkdirSync(dxConfig["divbloxPackagesRootLocal"]+"/"+packageName);
 
     const packageNameCamelCase = dxUtils.convertLowerCaseToCamelCase(packageName,"-");
+    const packageNamePascalCase = dxUtils.convertLowerCaseToPascalCase(packageName, "-");
     const dxPackagesPathParts = dxConfig["divbloxPackagesRootLocal"].split("/");
     let dxAppScriptRequire = '../'+appScriptName;
     for (let i = 0; i < dxPackagesPathParts.length; i++) {
@@ -104,6 +105,7 @@ async function createDefaults(configPath, appScriptName, packageName) {
         fileContentStr = fileContentStr.toString();
         const tokensToReplace = {
             "packageName": packageNameCamelCase,
+            "packageNamePascalCase": packageNamePascalCase,
             "dxAppScriptRequire": dxAppScriptRequire};
         const availableTokensToReplace = filesToCreate[fileDescription].tokens;
         if (typeof availableTokensToReplace !== "undefined") {
