@@ -1,28 +1,126 @@
 {
-  "exampleEntity": {
+  "exampleEntityOne": {
     "module": "main",
     "attributes": {
-      "exampleDateTime": "datetime",
-      "exampleString": "varchar(50)",
-      "exampleNumber": "int",
-      "exampleText": "text"
+      "exampleOneTimeStamp": {
+        "type": "datetime",
+        "lengthOrValues": null,
+        "default": "CURRENT_TIMESTAMP",
+        "allowNull": true
+      },
+      "exampleOneStringWithNull": {
+        "type": "varchar",
+        "lengthOrValues": 50,
+        "default": null,
+        "allowNull": true
+      },
+      "exampleOneStringWithoutNull": {
+        "type": "varchar",
+        "lengthOrValues": 15,
+        "default": null,
+        "allowNull": false
+      },
+      "exampleOneBigInt": {
+        "type": "bigint",
+        "lengthOrValues": 20,
+        "default": null,
+        "allowNull": true
+      },
+      "exampleOneText": {
+        "type": "text",
+        "lengthOrValues": null,
+        "default": null,
+        "allowNull": true
+      },
+      "exampleOneGeometry": {
+        "type": "geometry",
+        "lengthOrValues": null,
+        "default": null,
+        "allowNull": false
+      }
     },
+    "indexes": [
+      {
+        "attribute": "exampleOneBigInt",
+        "indexName": "exampleEntityOne_exampleOneBigInt",
+        "indexChoice": "index",
+        "type": "BTREE"
+      },
+      {
+        "attribute": "exampleOneStringWithoutNull",
+        "indexName": "exampleEntityOne_exampleOneStringWithoutNull",
+        "indexChoice": "unique",
+        "type": "BTREE"
+      },
+      {
+        "attribute": "exampleOneGeometry",
+        "indexName": "exampleEntityOne_exampleOneGeometry",
+        "indexChoice": "spatial",
+        "type": "BTREE"
+      },
+      {
+        "attribute": "exampleOneText",
+        "indexName": "exampleEntityOne_exampleOneText",
+        "indexChoice": "fulltext",
+        "type": "BTREE"
+      }
+    ],
     "relationships": {
-      "secondExampleEntity": [
-        "firstRelationship",
-        "secondRelationship"
-      ]
+    },
+    "options": {
+      "enforceLockingConstraints": true
     }
   },
-  "secondExampleEntity": {
+  "exampleEntityTwo": {
     "module": "main",
     "attributes": {
-      "exampleDateTime": "datetime",
-      "exampleString": "varchar(50)",
-      "exampleNumber": "int",
-      "exampleText": "text"
+      "exampleTwoTimeStamp": {
+        "type": "datetime",
+        "lengthOrValues": null,
+        "default": "CURRENT_TIMESTAMP",
+        "allowNull": true
+      },
+      "exampleTwoStringWithNull": {
+        "type": "varchar",
+        "lengthOrValues": 50,
+        "default": null,
+        "allowNull": true
+      },
+      "exampleTwoStringWithoutNull": {
+        "type": "varchar",
+        "lengthOrValues": 15,
+        "default": null,
+        "allowNull": false
+      },
+      "exampleTwoBigInt": {
+        "type": "bigint",
+        "lengthOrValues": 20,
+        "default": null,
+        "allowNull": true
+      },
+      "exampleTwoText": {
+        "type": "text",
+        "lengthOrValues": null,
+        "default": null,
+        "allowNull": true
+      }
     },
+    "indexes": [
+      {
+        "attribute": "exampleTwoBigInt",
+        "indexName": "exampleEntityTwo_exampleTwoBigInt",
+        "indexChoice": "index",
+        "type": "BTREE"
+      }
+    ],
     "relationships": {
+      "exampleEntityOne":[
+        "relationshipOne",
+        "relationshipTwo"
+      ]
+    },
+    "options": {
+      "enforceLockingConstraints": false
     }
   }
 }
