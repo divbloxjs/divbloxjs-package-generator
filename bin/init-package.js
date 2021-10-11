@@ -9,6 +9,8 @@ const TEMPLATE_DIR = path.join(__dirname, '..', 'templates')
 const filesToCreate = {
     "Data model": {"location": "data-model.json",
         "template": TEMPLATE_DIR+'/data-model.json'},
+    "Data model readme": {"location": "data-model-readme.md",
+        "template": TEMPLATE_DIR+'/data-model-readme.md'},
     "Package main js": {"location": "index.js",
         "template": TEMPLATE_DIR+'/index.js',
         "tokens":["packageName","packageNamePascalCase","dxAppScriptRequire"]},
