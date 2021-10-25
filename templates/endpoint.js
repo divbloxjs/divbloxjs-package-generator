@@ -9,7 +9,7 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
         this.declareOperations(
             [
                 {
-                "operationName": "test",
+                "operationName": "getPackageName",
                 "allowedAccess": ["anonymous"]
                 }
             ]
