@@ -16,7 +16,7 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
         );
     }
 
-    async executeOperation(operation, request) {
+    async executeOperation(operation, request, dxInstance = null) {
         if (!await super.executeOperation(operation, request)) {
             return false;
         }
