@@ -6,17 +6,29 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
     constructor() {
         super();
         // TODO: Declare any additional operations here
-        this.addOperations(["getPackageName"]);
+        this.declareOperations(
+            [
+                {
+                "operationName": "test",
+                "allowedAccess": ["anonymous"]
+                }
+            ]
+        );
     }
 
     async executeOperation(operation, request) {
-        await super.executeOperation(operation, request);
+        if (!await super.executeOperation(operation, request)) {
+            return false;
+        }
 
+        // Here we have to deal with our custom operations
         switch(operation) {
             case 'getPackageName': await this.getPackageName();
                 break;
             // TODO: Add additional cases here for each declared operation
         }
+
+        return true;
     }
 
     async getPackageName() {
