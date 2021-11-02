@@ -83,7 +83,7 @@ async function createDefaults(configPath, appScriptName, packageName) {
     }
 
     if (!fs.existsSync("./"+dxConfig["divbloxPackagesRootLocal"])) {
-        console.log("Creating "+dxConfig["divbloxPackagesRootLocal"]+" directory...");
+        dxUtils.printInfoMessage("Creating "+dxConfig["divbloxPackagesRootLocal"]+" directory...");
         fs.mkdirSync(dxConfig["divbloxPackagesRootLocal"]);
     }
 
@@ -91,7 +91,7 @@ async function createDefaults(configPath, appScriptName, packageName) {
         console.error("The provided package name already exists in the local divblox packages folder.");
         return;
     }
-    console.log("Creating "+dxConfig["divbloxPackagesRootLocal"]+"/"+packageName+" directory...");
+    dxUtils.printInfoMessage("Creating "+dxConfig["divbloxPackagesRootLocal"]+"/"+packageName+" directory...");
     fs.mkdirSync(dxConfig["divbloxPackagesRootLocal"]+"/"+packageName);
 
     const packageNameCamelCase = dxUtils.convertLowerCaseToCamelCase(packageName,"-");
@@ -102,7 +102,7 @@ async function createDefaults(configPath, appScriptName, packageName) {
         dxAppScriptRequire = '../'+dxAppScriptRequire;
     }
     for (const fileDescription of Object.keys(filesToCreate)) {
-        console.log("Creating "+fileDescription+"...");
+        dxUtils.printInfoMessage("Creating "+fileDescription+"...");
         let fileContentStr = await fsAsync.readFile(filesToCreate[fileDescription].template);
         fileContentStr = fileContentStr.toString();
         const tokensToReplace = {
@@ -127,7 +127,7 @@ async function createDefaults(configPath, appScriptName, packageName) {
         await fsAsync.writeFile(finalLocation, fileContentStr);
     }
     await fsAsync.writeFile(configPath, JSON.stringify(dxConfig,null,2));
-    console.log("Divblox package initialization done!");
+    dxUtils.printSuccessMessage("Divblox package initialization done!");
 }
 
 /**
@@ -188,7 +188,7 @@ async function preparePackage() {
 async function createPackage(configPath, appScriptName, packageName) {
     const lowerCasePackageName = dxUtils.getCamelCaseSplittedToLowerCase(packageName," ");
     const normalizedPackageName = getNormalizePackageName(lowerCasePackageName);
-    console.log("Creating package '"+normalizedPackageName+"'... ");
+    dxUtils.printHeadingMessage("Creating package '"+normalizedPackageName+"'... ");
     await createDefaults(configPath, appScriptName, normalizedPackageName);
 
 }
