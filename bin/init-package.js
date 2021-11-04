@@ -56,9 +56,10 @@ function getNormalizePackageName(packageName) {
 
 /**
  * Creates the minimum configuration files needed for a Divblox package
- * @param configPath The path to the divblox config for the local project
- * @param appScriptName The filename for the dx app script in the project root
- * @param packageName The name of the package
+ * @param {string} configPath The path to the divblox config for the local project
+ * @param {string} appScriptName The filename for the dx app script in the project root
+ * @param {string} packageName The name of the package
+ * @param {string} endpointName The name of the endpoint's url path
  * @returns {Promise<void>}
  */
 async function createDefaults(configPath, appScriptName, packageName, endpointName) {
@@ -77,7 +78,8 @@ async function createDefaults(configPath, appScriptName, packageName, endpointNa
     }
     const packageConfigObj = {
         "packageName": packageName,
-        "endpointName": typeof endpointName === "undefined" ? packageName : endpointName
+        "endpointName": ((typeof endpointName === "undefined") ||
+            (endpointName.length < 1)) ? packageName : endpointName
     }
     if (typeof dxConfig["divbloxPackages"]["local"] === "undefined") {
         dxConfig["divbloxPackages"]["local"] = [packageConfigObj];
@@ -174,8 +176,11 @@ async function preparePackage() {
     }
 
     const packageName = await dxUtils.getCommandLineInput("Package name:");
+    const endpointName = await dxUtils.getCommandLineInput("Endpoint name (This is the url path name where " +
+        "the package will be available as an endpoint e.g /api/[endpointName]). You can leave this blank to simply " +
+        "use the package name for this: ");
     if (packageName.length > 1) {
-        await createPackage(dxConfigPath, dxAppScriptPath, packageName);
+        await createPackage(dxConfigPath, dxAppScriptPath, packageName, endpointName);
     } else {
         console.error("Invalid package name provided. Please try again.");
     }
@@ -183,16 +188,17 @@ async function preparePackage() {
 
 /**
  * Creates a new node package with the given name and installs divbloxjs
- * @param configPath The path to the divblox config for the local project
- * @param appScriptName The filename for the dx app script in the project root
- * @param packageName The packageName provided via the command line
+ * @param {string} configPath The path to the divblox config for the local project
+ * @param {string} appScriptName The filename for the dx app script in the project root
+ * @param {string} packageName The packageName provided via the command line
+ * @param {string} endpointName The endpointName provided via the command line
  * @return {Promise<void>}
  */
-async function createPackage(configPath, appScriptName, packageName) {
+async function createPackage(configPath, appScriptName, packageName, endpointName) {
     const lowerCasePackageName = dxUtils.getCamelCaseSplittedToLowerCase(packageName," ");
     const normalizedPackageName = getNormalizePackageName(lowerCasePackageName);
     dxUtils.printHeadingMessage("Creating package '"+normalizedPackageName+"'... ");
-    await createDefaults(configPath, appScriptName, normalizedPackageName);
+    await createDefaults(configPath, appScriptName, normalizedPackageName, endpointName);
 
 }
 
