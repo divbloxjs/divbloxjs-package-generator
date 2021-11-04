@@ -6,6 +6,7 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
     constructor() {
         super();
         this.endpointName = "[packageName]";
+        this.endpointDescription = "[packageName] endpoint";
         // TODO: Declare any additional operations here
         this.declareOperations(
             [
