@@ -61,7 +61,7 @@ function getNormalizePackageName(packageName) {
  * @param packageName The name of the package
  * @returns {Promise<void>}
  */
-async function createDefaults(configPath, appScriptName, packageName, endpointName) {
+async function createDefaults(configPath, appScriptName, packageName) {
     let dxConfig = await fsAsync.readFile("./"+configPath);
     dxConfig = JSON.parse(dxConfig.toString());
 
@@ -75,14 +75,11 @@ async function createDefaults(configPath, appScriptName, packageName, endpointNa
             "npm": []
         }
     }
-    const packageConfigObj = {
-        "packageName": packageName,
-        "endpointName": typeof endpointName === "undefined" ? packageName : endpointName
-    }
+
     if (typeof dxConfig["divbloxPackages"]["local"] === "undefined") {
-        dxConfig["divbloxPackages"]["local"] = [packageConfigObj];
+        dxConfig["divbloxPackages"]["local"] = [packageName];
     } else {
-        dxConfig["divbloxPackages"]["local"].push(packageConfigObj);
+        dxConfig["divbloxPackages"]["local"].push(packageName);
     }
 
     if (!fs.existsSync("./"+dxConfig["divbloxPackagesRootLocal"])) {
