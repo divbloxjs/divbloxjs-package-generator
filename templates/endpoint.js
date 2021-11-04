@@ -7,15 +7,15 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
         super();
         this.endpointName = "[packageName]";
         this.endpointDescription = "[packageName] endpoint";
+
         // TODO: Declare any additional operations here
-        this.declareOperations(
-            [
-                {
+        const getPackageName = this.getOperationDefinition(
+            {
                 "operationName": "getPackageName",
                 "allowedAccess": ["anonymous"]
-                }
-            ]
+            }
         );
+        this.declareOperations([getPackageName]);
     }
 
     async executeOperation(operation, request, dxInstance = null) {
