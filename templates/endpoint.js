@@ -5,6 +5,7 @@ const divbloxEndpointBase = require('divbloxjs/dx-core-modules/endpoint-base');
 class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
     constructor() {
         super();
+        this.endpointName = "[packageName]";
         // TODO: Declare any additional operations here
         this.declareOperations(
             [
