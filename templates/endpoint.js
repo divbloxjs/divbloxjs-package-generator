@@ -1,10 +1,9 @@
-const dx = require('[dxAppScriptRequire]');
 const [packageName]Controller = require('./index');
 const divbloxEndpointBase = require('divbloxjs/dx-core-modules/endpoint-base');
 
 class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
-    constructor() {
-        super();
+    constructor(dxInstance = null) {
+        super(dxInstance);
 
         this.endpointName = "[packageName]"; // Change this to set the actual url endpoint
         this.endpointDescription = "[packageName] endpoint"; // Change this to be more descriptive of the endpoint
@@ -52,6 +51,5 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
 
     // TODO: Add implementations for each declared operation below
 }
-const [packageName]EndpointInstance = new [packageNamePascalCase]Endpoint();
 
-module.exports = [packageName]EndpointInstance;
+module.exports = [packageNamePascalCase]Endpoint;
