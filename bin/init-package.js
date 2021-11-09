@@ -72,7 +72,7 @@ async function createDefaults(configPath, appScriptName, packageName) {
     if (typeof dxConfig["divbloxPackages"] === "undefined") {
         dxConfig["divbloxPackages"] = {
             "local": [],
-            "npm": []
+            "remote": []
         }
     }
 
