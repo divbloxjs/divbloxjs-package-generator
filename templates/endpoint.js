@@ -30,8 +30,8 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
         //this.declareEntitySchemas(["anEntityInYourDataModel"]);
     }
 
-    async executeOperation(operation, request, dxInstance = null) {
-        if (!await super.executeOperation(operation, request, dxInstance)) {
+    async executeOperation(operation, request) {
+        if (!await super.executeOperation(operation, request)) {
             return false;
         }
 
