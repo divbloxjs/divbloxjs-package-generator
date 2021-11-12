@@ -8,6 +8,8 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
         this.endpointName = "[packageName]"; // Change this to set the actual url endpoint
         this.endpointDescription = "[packageName] endpoint"; // Change this to be more descriptive of the endpoint
 
+        this.controller = new [packageName]Controller(dxInstance);
+
         // TODO: Declare any additional operations here
         const getPackageName = this.getOperationDefinition(
             {
