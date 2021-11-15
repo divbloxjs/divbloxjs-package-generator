@@ -15,6 +15,7 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
             {
                 "operationName": "getPackageName",
                 "allowedAccess": ["anonymous"], // If this array does not contain "anonymous", a JWT token will be expected in the Auth header
+                "operationSummary": "A short intro for the operation",
                 "operationDescription": "This sentence describes the operation",
                 "parameters": [], // An array of this.getInputParameter()
                 "requestType": "GET", // GET|POST|PUT|DELETE|OPTIONS|HEAD|PATCH|TRACE
