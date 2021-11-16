@@ -1,5 +1,5 @@
 const [packageName]Controller = require('./index');
-const divbloxEndpointBase = require('divbloxjs/dx-core-modules/endpoint-base');
+const divbloxEndpointBase = require('[endpointBasePath]');
 
 class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
     constructor(dxInstance = null) {

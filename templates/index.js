@@ -1,4 +1,4 @@
-const divbloxPackageControllerBase = require('divbloxjs/dx-core-modules/package-controller-base');
+const divbloxPackageControllerBase = require('[controllerBasePath]');
 
 class [packageNamePascalCase] extends divbloxPackageControllerBase {
     constructor(dxInstance = null) {
