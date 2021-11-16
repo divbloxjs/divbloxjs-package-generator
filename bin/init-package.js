@@ -76,11 +76,11 @@ async function createDefaults(configPath, appScriptName, packageName) {
         }
     }
 
-    const controllerBasePath = typeof dxConfig["divbloxPackages"]["remote"][packageName] === "undefined" ?
+    const controllerBasePath = !dxConfig["divbloxPackages"]["remote"].includes(packageName) ?
         'divbloxjs/dx-core-modules/package-controller-base' :
         packageName+'/index';
 
-    const endpointBasePath = typeof dxConfig["divbloxPackages"]["remote"][packageName] === "undefined" ?
+    const endpointBasePath = !dxConfig["divbloxPackages"]["remote"].includes(packageName) ?
         'divbloxjs/dx-core-modules/endpoint-base' :
         packageName+'/endpoint';
 
