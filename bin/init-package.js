@@ -119,6 +119,7 @@ async function createDefaults(configPath, appScriptName, packageName) {
         fileContentStr = fileContentStr.toString();
 
         const tokensToReplace = {
+            "packageNameDefault": packageName,
             "packageName": packageNameCamelCase,
             "packageNamePascalCase": packageNamePascalCase,
             "dxAppScriptRequire": dxAppScriptRequire,
