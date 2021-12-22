@@ -13,7 +13,7 @@ const filesToCreate = {
         "template": TEMPLATE_DIR+'/data-model-readme.md'},
     "Package main js": {"location": "index.js",
         "template": TEMPLATE_DIR+'/index.js',
-        "tokens":["packageName","packageNamePascalCase","dxAppScriptRequire","controllerBasePath"]},
+        "tokens":["packageNameDefault","packageName","packageNamePascalCase","dxAppScriptRequire","controllerBasePath"]},
     "Package end point js": {"location": "endpoint.js",
         "template": TEMPLATE_DIR+'/endpoint.js',
         "tokens":["packageName","packageNamePascalCase","dxAppScriptRequire","endpointBasePath"]}
