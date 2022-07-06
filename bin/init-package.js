@@ -2,29 +2,37 @@
 
 const fs = require("fs");
 const fsAsync = require("fs").promises;
-const path = require('path')
-const dxUtils = require('dx-utils');
-const TEMPLATE_DIR = path.join(__dirname, '..', 'templates')
+const path = require("path");
+const dxUtils = require("dx-utilities");
+const TEMPLATE_DIR = path.join(__dirname, "..", "templates");
 
 const filesToCreate = {
-    "Data model": {"location": "data-model.json",
-        "template": TEMPLATE_DIR+'/data-model.json'},
-    "Data model readme": {"location": "data-model-readme.md",
-        "template": TEMPLATE_DIR+'/data-model-readme.md'},
-    "Package main js": {"location": "index.js",
-        "template": TEMPLATE_DIR+'/index.js',
-        "tokens":["packageNameDefault","packageName","packageNamePascalCase","dxAppScriptRequire","controllerBasePath"]},
-    "Package end point js": {"location": "endpoint.js",
-        "template": TEMPLATE_DIR+'/endpoint.js',
-        "tokens":["packageName","packageNamePascalCase","dxAppScriptRequire","endpointBasePath"]}
-}
+    "Data model": { location: "data-model.json", template: TEMPLATE_DIR + "/data-model.json" },
+    "Data model readme": { location: "data-model-readme.md", template: TEMPLATE_DIR + "/data-model-readme.md" },
+    "Package main js": {
+        location: "index.js",
+        template: TEMPLATE_DIR + "/index.js",
+        tokens: [
+            "packageNameDefault",
+            "packageName",
+            "packageNamePascalCase",
+            "dxAppScriptRequire",
+            "controllerBasePath",
+        ],
+    },
+    "Package end point js": {
+        location: "endpoint.js",
+        template: TEMPLATE_DIR + "/endpoint.js",
+        tokens: ["packageName", "packageNamePascalCase", "dxAppScriptRequire", "endpointBasePath"],
+    },
+};
 
 /**
  * An async wrapper for the isEmptyDirectory function
  * @param directory The path to the directory
  * @return {Promise<boolean>} True if directory is empty
  */
-async function isEmptyDirectoryAsync (directory) {
+async function isEmptyDirectoryAsync(directory) {
     return new Promise((accept, reject) => {
         isEmptyDirectory(directory, accept);
     });
@@ -35,11 +43,11 @@ async function isEmptyDirectoryAsync (directory) {
  * @param directory The path to the directory
  * @param fn The callback function that is called with the result
  */
-function isEmptyDirectory (directory, fn) {
+function isEmptyDirectory(directory, fn) {
     fs.readdir(directory, function (err, files) {
-        if (err && err.code !== 'ENOENT') throw err
-        fn(!files || !files.length)
-    })
+        if (err && err.code !== "ENOENT") throw err;
+        fn(!files || !files.length);
+    });
 }
 
 /**
@@ -49,9 +57,9 @@ function isEmptyDirectory (directory, fn) {
  */
 function getNormalizePackageName(packageName) {
     return packageName
-        .replace(/[^A-Za-z0-9.-]+/g, '-')
-        .replace(/^[-_.]+|-+$/g, '')
-        .toLowerCase()
+        .replace(/[^A-Za-z0-9.-]+/g, "-")
+        .replace(/^[-_.]+|-+$/g, "")
+        .toLowerCase();
 }
 
 /**
@@ -62,7 +70,7 @@ function getNormalizePackageName(packageName) {
  * @returns {Promise<void>}
  */
 async function createDefaults(configPath, appScriptName, packageName) {
-    let dxConfig = await fsAsync.readFile("./"+configPath);
+    let dxConfig = await fsAsync.readFile("./" + configPath);
     dxConfig = JSON.parse(dxConfig.toString());
 
     if (typeof dxConfig["divbloxPackagesRootLocal"] === "undefined") {
@@ -71,18 +79,18 @@ async function createDefaults(configPath, appScriptName, packageName) {
 
     if (typeof dxConfig["divbloxPackages"] === "undefined") {
         dxConfig["divbloxPackages"] = {
-            "local": [],
-            "remote": []
-        }
+            local: [],
+            remote: [],
+        };
     }
 
-    const controllerBasePath = !dxConfig["divbloxPackages"]["remote"].includes(packageName) ?
-        'divbloxjs/dx-core-modules/package-controller-base' :
-        packageName+'/index';
+    const controllerBasePath = !dxConfig["divbloxPackages"]["remote"].includes(packageName)
+        ? "divbloxjs/dx-core-modules/package-controller-base"
+        : packageName + "/index";
 
-    const endpointBasePath = !dxConfig["divbloxPackages"]["remote"].includes(packageName) ?
-        'divbloxjs/dx-core-modules/endpoint-base' :
-        packageName+'/endpoint';
+    const endpointBasePath = !dxConfig["divbloxPackages"]["remote"].includes(packageName)
+        ? "divbloxjs/dx-core-modules/endpoint-base"
+        : packageName + "/endpoint";
 
     if (typeof dxConfig["divbloxPackages"]["local"] === "undefined") {
         dxConfig["divbloxPackages"]["local"] = [packageName];
@@ -90,47 +98,48 @@ async function createDefaults(configPath, appScriptName, packageName) {
         dxConfig["divbloxPackages"]["local"].push(packageName);
     }
 
-    if (!fs.existsSync("./"+dxConfig["divbloxPackagesRootLocal"])) {
-        dxUtils.printInfoMessage("Creating "+dxConfig["divbloxPackagesRootLocal"]+" directory...");
+    if (!fs.existsSync("./" + dxConfig["divbloxPackagesRootLocal"])) {
+        dxUtils.printInfoMessage("Creating " + dxConfig["divbloxPackagesRootLocal"] + " directory...");
         fs.mkdirSync(dxConfig["divbloxPackagesRootLocal"]);
     }
 
-    if (fs.existsSync("./"+dxConfig["divbloxPackagesRootLocal"]+"/"+packageName)){
+    if (fs.existsSync("./" + dxConfig["divbloxPackagesRootLocal"] + "/" + packageName)) {
         console.error("The provided package name already exists in the local divblox packages folder.");
         return;
     }
 
-    dxUtils.printInfoMessage("Creating "+dxConfig["divbloxPackagesRootLocal"]+"/"+packageName+" directory...");
-    fs.mkdirSync(dxConfig["divbloxPackagesRootLocal"]+"/"+packageName);
+    dxUtils.printInfoMessage("Creating " + dxConfig["divbloxPackagesRootLocal"] + "/" + packageName + " directory...");
+    fs.mkdirSync(dxConfig["divbloxPackagesRootLocal"] + "/" + packageName);
 
-    const packageNameCamelCase = dxUtils.convertLowerCaseToCamelCase(packageName,"-");
+    const packageNameCamelCase = dxUtils.convertLowerCaseToCamelCase(packageName, "-");
     const packageNamePascalCase = dxUtils.convertLowerCaseToPascalCase(packageName, "-");
     const dxPackagesPathParts = dxConfig["divbloxPackagesRootLocal"].split("/");
 
-    let dxAppScriptRequire = '../'+appScriptName;
+    let dxAppScriptRequire = "../" + appScriptName;
     for (let i = 0; i < dxPackagesPathParts.length; i++) {
-        dxAppScriptRequire = '../'+dxAppScriptRequire;
+        dxAppScriptRequire = "../" + dxAppScriptRequire;
     }
 
     for (const fileDescription of Object.keys(filesToCreate)) {
-        dxUtils.printInfoMessage("Creating "+fileDescription+"...");
+        dxUtils.printInfoMessage("Creating " + fileDescription + "...");
 
         let fileContentStr = await fsAsync.readFile(filesToCreate[fileDescription].template);
         fileContentStr = fileContentStr.toString();
 
         const tokensToReplace = {
-            "packageNameDefault": packageName,
-            "packageName": packageNameCamelCase,
-            "packageNamePascalCase": packageNamePascalCase,
-            "dxAppScriptRequire": dxAppScriptRequire,
-            "controllerBasePath": controllerBasePath,
-            "endpointBasePath": endpointBasePath};
+            packageNameDefault: packageName,
+            packageName: packageNameCamelCase,
+            packageNamePascalCase: packageNamePascalCase,
+            dxAppScriptRequire: dxAppScriptRequire,
+            controllerBasePath: controllerBasePath,
+            endpointBasePath: endpointBasePath,
+        };
 
         const availableTokensToReplace = filesToCreate[fileDescription].tokens;
         if (typeof availableTokensToReplace !== "undefined") {
             for (const token of availableTokensToReplace) {
                 if (Object.keys(tokensToReplace).includes(token)) {
-                    const search = '['+token+']';
+                    const search = "[" + token + "]";
                     let done = false;
                     while (!done) {
                         done = fileContentStr.indexOf(search) === -1;
@@ -140,10 +149,11 @@ async function createDefaults(configPath, appScriptName, packageName) {
                 }
             }
         }
-        const finalLocation = dxConfig["divbloxPackagesRootLocal"]+"/"+packageName+"/"+filesToCreate[fileDescription].location;
+        const finalLocation =
+            dxConfig["divbloxPackagesRootLocal"] + "/" + packageName + "/" + filesToCreate[fileDescription].location;
         await fsAsync.writeFile(finalLocation, fileContentStr);
     }
-    await fsAsync.writeFile(configPath, JSON.stringify(dxConfig,null,2));
+    await fsAsync.writeFile(configPath, JSON.stringify(dxConfig, null, 2));
     dxUtils.printSuccessMessage("Divblox package initialization done!");
 }
 
@@ -152,37 +162,46 @@ async function createDefaults(configPath, appScriptName, packageName) {
  * @return {Promise<void>}
  */
 async function preparePackage() {
-    let dxConfigFolderPath = await dxUtils.getCommandLineInput("The Divblox package generator requires divbloxjs to be " +
-        "installed and configured.\nPlease provide the folder path that contains the file 'dxconfig.json': " +
-        "(Usually 'divblox-config') (Press ENTER to use the default folder path)");
+    let dxConfigFolderPath = await dxUtils.getCommandLineInput(
+        "The Divblox package generator requires divbloxjs to be " +
+            "installed and configured.\nPlease provide the folder path that contains the file 'dxconfig.json': " +
+            "(Usually 'divblox-config') (Press ENTER to use the default folder path)"
+    );
     if (dxConfigFolderPath.length === 0) {
-        dxConfigFolderPath = 'divblox-config';
+        dxConfigFolderPath = "divblox-config";
     }
-    const dxConfigPath = dxConfigFolderPath+"/dxconfig.json";
+    const dxConfigPath = dxConfigFolderPath + "/dxconfig.json";
     try {
-        if (!fs.existsSync("./"+dxConfigPath)) {
-            console.error("Divblox config path not found. You can try again or try to reinstall divbloxjs by running the " +
-                "divbloxjs application generator with:\n'npx github:divbloxjs/divbloxjs-application-generator'");
+        if (!fs.existsSync("./" + dxConfigPath)) {
+            console.error(
+                "Divblox config path not found. You can try again or try to reinstall divbloxjs by running the " +
+                    "divbloxjs application generator with:\n'npx github:divbloxjs/divbloxjs-application-generator'"
+            );
             return;
         }
-    } catch(e) {
+    } catch (e) {
         dxUtils.printErrorMessage("An error occurred while checking the divblox config path. Please try again");
         return;
     }
 
-    let dxAppScriptPath = await dxUtils.getCommandLineInput("Please provide the name for the dx-app script: " +
-        "(Usually 'dx-app.js') (Press ENTER to use the default script name)");
+    let dxAppScriptPath = await dxUtils.getCommandLineInput(
+        "Please provide the name for the dx-app script: " +
+            "(Usually 'dx-app.js') (Press ENTER to use the default script name)"
+    );
     if (dxAppScriptPath.length === 0) {
-        dxAppScriptPath = 'dx-app';
+        dxAppScriptPath = "dx-app";
     }
     try {
-        if (!fs.existsSync("./"+dxAppScriptPath+".js")) {
-            dxUtils.printErrorMessage(dxAppScriptPath+".js not found. This script should be in the current folder. You can try again " +
-                "or try to reinstall divbloxjs by running the " +
-                "divbloxjs application generator with:\n'npx github:divbloxjs/divbloxjs-application-generator'");
+        if (!fs.existsSync("./" + dxAppScriptPath + ".js")) {
+            dxUtils.printErrorMessage(
+                dxAppScriptPath +
+                    ".js not found. This script should be in the current folder. You can try again " +
+                    "or try to reinstall divbloxjs by running the " +
+                    "divbloxjs application generator with:\n'npx github:divbloxjs/divbloxjs-application-generator'"
+            );
             return;
         }
-    } catch(e) {
+    } catch (e) {
         dxUtils.printErrorMessage("An error occurred while checking the divblox app script. Please try again");
         return;
     }
@@ -203,11 +222,10 @@ async function preparePackage() {
  * @return {Promise<void>}
  */
 async function createPackage(configPath, appScriptName, packageName) {
-    const lowerCasePackageName = dxUtils.getCamelCaseSplittedToLowerCase(packageName," ");
+    const lowerCasePackageName = dxUtils.getCamelCaseSplittedToLowerCase(packageName, " ");
     const normalizedPackageName = getNormalizePackageName(lowerCasePackageName);
-    dxUtils.printHeadingMessage("Creating package '"+normalizedPackageName+"'... ");
+    dxUtils.printHeadingMessage("Creating package '" + normalizedPackageName + "'... ");
     await createDefaults(configPath, appScriptName, normalizedPackageName);
-
 }
 
 // Script entry point
