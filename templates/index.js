@@ -1,5 +1,9 @@
 const divbloxPackageControllerBase = require('[controllerBasePath]');
 
+/*
+[packageControllerInfo]
+*/
+
 class [packageNamePascalCase] extends divbloxPackageControllerBase {
     constructor(dxInstance = null, packageName = '[packageNameDefault]') {
         super(dxInstance, packageName);
