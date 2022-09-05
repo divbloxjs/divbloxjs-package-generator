@@ -1,11 +1,16 @@
 const [packageName]Controller = require('./index');
 const divbloxEndpointBase = require('[endpointBasePath]');
+const DivbloxBase = require("divbloxjs/divblox");
 
 /*
 [packageEndPointInfo]
 */
 
 class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
+    /**
+     * Initializes the result and declares the available operations
+     * @param {DivbloxBase} dxInstance An instance of divbloxjs to allow for access to the app configuration
+     */
     constructor(dxInstance = null) {
         super(dxInstance);
 
