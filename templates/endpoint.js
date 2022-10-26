@@ -54,7 +54,7 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
      * @returns {[packageName]Controller} An instance of the package's controller. Override here if a different controller should be instantiated
      */
     getControllerInstance() {
-        return new [packageName]Controller(dxInstance);
+        return new [packageName]Controller(this.dxInstance);
     }
 
     async executeOperation(operation, request) {
