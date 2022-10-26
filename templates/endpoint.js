@@ -17,8 +17,20 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
         this.endpointName = "[packageName]"; // Change this to set the actual url endpoint
         this.endpointDescription = "[packageName] endpoint"; // Change this to be more descriptive of the endpoint
 
-        this.controller = new [packageName]Controller(dxInstance);
+        // You need to do this in order for the operation to be available on the endpoint.
+        // Also, this declaration provides the necessary input for swagger ui present the docs for this
+        const operations = this.handleOperationDeclarations();
+        this.declareOperations(operations);
 
+        // TODO: Declare any entity schemas here if needed
+        // An example of how to declare entity schemas for swagger ui
+        //this.declareEntitySchemas(["anEntityInYourDataModel"]);
+    }
+
+    /**
+     * @returns {[]} An array of operation definitions to be passed to this.declareOperations()
+     */
+    handleOperationDeclarations() {
         // TODO: Declare any additional operations here
         const getPackageName = this.getOperationDefinition(
             {
@@ -32,20 +44,27 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
                 "responseSchema": {}, // this.getSchema()
             }
         );
+        
+        return [
+            getPackageName
+        ];
+    }
 
-        // You need to do this in order for the operation to be available on the endpoint.
-        // Also, this declaration provides the necessary input for swagger ui present the docs for this
-        this.declareOperations([getPackageName]);
-
-        // TODO: Declare any entity schemas here if needed
-        // An example of how to declare entity schemas for swagger ui
-        //this.declareEntitySchemas(["anEntityInYourDataModel"]);
+    /**
+     * @returns {[packageName]Controller} An instance of the package's controller. Override here if a different controller should be instantiated
+     */
+    getControllerInstance() {
+        return new [packageName]Controller(dxInstance);
     }
 
     async executeOperation(operation, request) {
         if (!await super.executeOperation(operation, request)) {
             return false;
         }
+
+        // Create an instance of the controller that can be passed down to specific operations that might need access to it.
+        // The reason for creating the instance here is that we need a fresh instance for every request to ensure data integrity
+        const controller = this.getControllerInstance();
 
         // Here we have to deal with our custom operations
         switch(operation) {
