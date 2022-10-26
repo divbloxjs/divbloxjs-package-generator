@@ -16,6 +16,7 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
 
         this.endpointName = "[packageName]"; // Change this to set the actual url endpoint
         this.endpointDescription = "[packageName] endpoint"; // Change this to be more descriptive of the endpoint
+        this.controller = this.getControllerInstance();
 
         // You need to do this in order for the operation to be available on the endpoint.
         // Also, this declaration provides the necessary input for swagger ui present the docs for this
@@ -61,10 +62,6 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
         if (!await super.executeOperation(operation, request)) {
             return false;
         }
-
-        // Create an instance of the controller that can be passed down to specific operations that might need access to it.
-        // The reason for creating the instance here is that we need a fresh instance for every request to ensure data integrity
-        const controller = this.getControllerInstance();
 
         // Here we have to deal with our custom operations
         switch(operation) {
