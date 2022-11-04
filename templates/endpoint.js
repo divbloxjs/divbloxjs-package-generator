@@ -32,6 +32,7 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
      * @returns {[]} An array of operation definitions to be passed to this.declareOperations()
      */
     handleOperationDeclarations() {
+        let baseDeclarations = super.handleOperationDeclarations();
         // TODO: Declare any additional operations here
         const getPackageName = this.getOperationDefinition(
             {
@@ -46,9 +47,9 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
             }
         );
         
-        return [
-            getPackageName
-        ];
+        const packages = [getPackageName];
+        
+        return [...baseDeclarations, ...packages];
     }
 
     /**
