@@ -77,21 +77,32 @@ function getNormalizePackageName(packageName) {
  * @returns {Promise<void>}
  */
 async function createDefaults(configPath, appScriptName, packageName) {
+    const configRoot = configPath.substring(0, configPath.lastIndexOf("/"));
+
     let dxConfig = await fsAsync.readFile("./" + configPath);
+    let dynamicConfig = "{}";
+
+    if (!fs.existsSync("./" + configRoot + "/dynamic-config.json")) {
+        await fsAsync.writeFile(configRoot + "/dynamic-config.json", dynamicConfig);
+    } else {
+        dynamicConfig = await fsAsync.readFile("./" + configRoot + "/dynamic-config.json");
+    }
+
     dxConfig = JSON.parse(dxConfig.toString());
+    dynamicConfig = JSON.parse(dynamicConfig.toString());
 
     if (typeof dxConfig["divbloxPackagesRootLocal"] === "undefined") {
         dxConfig["divbloxPackagesRootLocal"] = "divblox-packages-local";
     }
 
-    if (typeof dxConfig["divbloxPackages"] === "undefined") {
-        dxConfig["divbloxPackages"] = {
+    if (typeof dynamicConfig["divbloxPackages"] === "undefined") {
+        dynamicConfig["divbloxPackages"] = {
             local: [],
             remote: [],
         };
     }
 
-    const isInheriting = dxConfig["divbloxPackages"]["remote"].includes(packageName);
+    const isInheriting = dynamicConfig["divbloxPackages"]["remote"].includes(packageName);
 
     const controllerBasePath = !isInheriting
         ? "divbloxjs/dx-core-modules/package-controller-base"
@@ -99,10 +110,10 @@ async function createDefaults(configPath, appScriptName, packageName) {
 
     const endpointBasePath = !isInheriting ? "divbloxjs/dx-core-modules/endpoint-base" : packageName + "/endpoint";
 
-    if (typeof dxConfig["divbloxPackages"]["local"] === "undefined") {
-        dxConfig["divbloxPackages"]["local"] = [packageName];
+    if (typeof dynamicConfig["divbloxPackages"]["local"] === "undefined") {
+        dynamicConfig["divbloxPackages"]["local"] = [packageName];
     } else {
-        dxConfig["divbloxPackages"]["local"].push(packageName);
+        dynamicConfig["divbloxPackages"]["local"].push(packageName);
     }
 
     if (!fs.existsSync("./" + dxConfig["divbloxPackagesRootLocal"])) {
@@ -181,7 +192,7 @@ async function createDefaults(configPath, appScriptName, packageName) {
             dxConfig["divbloxPackagesRootLocal"] + "/" + packageName + "/" + filesToCreate[fileDescription].location;
         await fsAsync.writeFile(finalLocation, fileContentStr);
     }
-    await fsAsync.writeFile(configPath, JSON.stringify(dxConfig, null, 2));
+    await fsAsync.writeFile(configRoot + "/dynamic-config.json", JSON.stringify(dynamicConfig, null, 4));
     dxUtils.printSuccessMessage("Divblox package initialization done!");
 }
 
