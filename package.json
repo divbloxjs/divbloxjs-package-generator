@@ -1,6 +1,6 @@
 {
     "name": "divbloxjs-package-generator",
-    "version": "1.1.2",
+    "version": "1.1.3",
     "description": "A package generator for divbloxjs that creates all the core required files and updates the local divblox configuration",
     "main": "bin/init-package.js",
     "preferGlobal": true,

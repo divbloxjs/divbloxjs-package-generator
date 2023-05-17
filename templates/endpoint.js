@@ -66,7 +66,7 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
      * An example operation
      */
     async getPackageName() {
-        this.forceResult({ message: "Package name is testPackage" }, 200);
+        this.forceResult({ message: "Package name is [packageName]" }, 200);
     }
 
     // TODO: Add implementations for each declared operation below
