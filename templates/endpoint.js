@@ -43,7 +43,10 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
                 "parameters": [], // An array of this.getInputParameter()
                 "requestType": "GET", // GET|POST|PUT|DELETE|OPTIONS|HEAD|PATCH|TRACE
                 "requestSchema": {}, // this.getSchema()
-                "responseSchema": {}, // this.getSchema()
+                "responseSchema": this.getSchema({ message: "string" }),
+                f: async (req, res) => {
+                    await this.getPackageName();
+                },
             }
         );
         
@@ -59,23 +62,11 @@ class [packageNamePascalCase]Endpoint extends divbloxEndpointBase {
         return new [packageName]Controller(this.dxInstance);
     }
 
-    async executeOperation(operation, request) {
-        if (!await super.executeOperation(operation, request)) {
-            return false;
-        }
-
-        // Here we have to deal with our custom operations
-        switch(operation) {
-            case 'getPackageName': await this.getPackageName();
-                break;
-            // TODO: Add additional cases here for each declared operation
-        }
-
-        return true;
-    }
-
+    /**
+     * An example operation
+     */
     async getPackageName() {
-        this.setResult(true, "Package name is [packageName]");
+        this.forceResult({ message: "Package name is testPackage" }, 200);
     }
 
     // TODO: Add implementations for each declared operation below
